@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 @Module({
   imports: [],
-  controllers: [],
   providers: [],
+  controllers: [],
 })
-export class AppModule {}
+export default class TaskModule {}
