@@ -10,6 +10,7 @@ export class TypeOrmConfigService {
     private dbConfig: ConfigType<typeof databaseConfig>,
   ) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    console.log('ddl', this.dbConfig.dllEnable);
     return {
       type: 'mysql',
       host: this.dbConfig.host,
@@ -18,7 +19,7 @@ export class TypeOrmConfigService {
       password: this.dbConfig.password,
       database: this.dbConfig.database,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: this.dbConfig.dllEnable,
     };
   }
 }

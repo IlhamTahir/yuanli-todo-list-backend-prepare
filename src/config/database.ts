@@ -7,4 +7,5 @@ export default registerAs('database', () => ({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   port: parseInt(process.env.DATABASE_PORT, 10) || 3306,
+  dllEnable: process.env.DDL_ENABLE === 'true',
 }));
