@@ -10,6 +10,7 @@ import { AuthService } from './service/AuthService';
 import { TokenController } from './controller/TokenController';
 import { APP_PIPE } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { UserController } from './controller/UserController';
 
 @Global()
 @Module({
@@ -33,7 +34,7 @@ import { JwtService } from '@nestjs/jwt';
       useClass: ValidationPipe,
     },
   ],
-  controllers: [TokenController],
+  controllers: [TokenController, UserController],
 })
 export default class CoreModule {
   constructor(private dataSource: DataSource) {}

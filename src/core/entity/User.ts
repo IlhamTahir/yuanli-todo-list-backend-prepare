@@ -11,7 +11,9 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   username: string;
 
   @Column()
@@ -20,10 +22,14 @@ export class User {
   @Column()
   salt: string;
 
-  @Column()
+  @Column({
+    default: false,
+  })
   locked: boolean;
 
-  @Column()
+  @Column({
+    default: true,
+  })
   enabled: boolean;
 
   @CreateDateColumn()
