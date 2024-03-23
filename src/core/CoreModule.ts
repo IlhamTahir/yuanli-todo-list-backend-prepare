@@ -1,12 +1,15 @@
-import { Global, Module } from '@nestjs/common';
+import { Global, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import databaseConfig from '../config/database';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { UserController } from './controller/UserController';
 import { UserService } from './service/UserService';
 import { User } from './entity/User';
 import { TypeOrmConfigService } from './service/TypeOrmConfigService';
+import { AuthService } from './service/AuthService';
+import { TokenController } from './controller/TokenController';
+import { APP_PIPE } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 
 @Global()
 @Module({
@@ -21,8 +24,16 @@ import { TypeOrmConfigService } from './service/TypeOrmConfigService';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  providers: [UserService],
-  controllers: [UserController],
+  providers: [
+    UserService,
+    AuthService,
+    JwtService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+  ],
+  controllers: [TokenController],
 })
 export default class CoreModule {
   constructor(private dataSource: DataSource) {}
