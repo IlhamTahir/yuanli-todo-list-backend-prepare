@@ -4,7 +4,8 @@ import { User } from '../entity/User';
 import { Repository } from 'typeorm';
 import { UserCreateRequest } from '../dto/UserCreateRequest';
 import * as bcrypt from 'bcrypt';
-import { SALT_ROUND } from '../constant/use';
+import { SALT_ROUND } from '../constant/user';
+import { UserUpdateRequest } from '../dto/UserUpdateRequest';
 
 @Injectable()
 export class UserService {
@@ -26,11 +27,21 @@ export class UserService {
 
     const user = new User();
     user.username = userCreateRequest.username;
-    user.salt = await bcrypt.genSalt(SALT_ROUND);
+    const salt = await bcrypt.genSalt(SALT_ROUND);
     user.encryptedPassword = await bcrypt.hash(
       userCreateRequest.password,
-      user.salt,
+      salt,
     );
+    return this.userRepository.save(user);
+  }
+
+  async get(id: number) {
+    return this.userRepository.findOneBy({ id });
+  }
+
+  async update(id: number, userUpdateRequest: UserUpdateRequest) {
+    const user = await this.get(id);
+    user.username = userUpdateRequest.username;
     return this.userRepository.save(user);
   }
 }

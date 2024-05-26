@@ -19,9 +19,6 @@ export class User {
   @Column()
   encryptedPassword: string;
 
-  @Column()
-  salt: string;
-
   @Column({
     default: false,
   })
