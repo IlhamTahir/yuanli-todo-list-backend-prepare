@@ -8,9 +8,11 @@ import { User } from './entity/User';
 import { TypeOrmConfigService } from './service/TypeOrmConfigService';
 import { AuthService } from './service/AuthService';
 import { TokenController } from './controller/TokenController';
-import { APP_PIPE } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { UserController } from './controller/UserController';
+import { JwtModule } from '@nestjs/jwt';
+import { SECRET_KEY } from './constant/user';
+import { AuthGuard } from './guard/AuthGuard';
 
 @Global()
 @Module({
@@ -23,15 +25,23 @@ import { UserController } from './controller/UserController';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
+    JwtModule.register({
+      global: true,
+      secret: SECRET_KEY,
+      signOptions: { expiresIn: '240s' },
+    }),
     TypeOrmModule.forFeature([User]),
   ],
   providers: [
     UserService,
     AuthService,
-    JwtService,
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
     },
   ],
   controllers: [TokenController, UserController],

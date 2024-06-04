@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { TokenCreateRequest } from '../dto/TokenCreateRequest';
 import { UserService } from './UserService';
 import * as bcrypt from 'bcrypt';
@@ -16,7 +20,7 @@ export class AuthService {
       tokenCreateRequest.username,
     );
     if (!user) {
-      throw new UnauthorizedException();
+      throw new NotFoundException();
     }
 
     const isMatch = await bcrypt.compare(
