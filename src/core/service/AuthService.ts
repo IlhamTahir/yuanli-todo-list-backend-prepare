@@ -7,6 +7,7 @@ import { TokenCreateRequest } from '../dto/TokenCreateRequest';
 import { UserService } from './UserService';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Cache } from '@nestjs/cache-manager';
 
 // later
 @Injectable()
@@ -14,6 +15,7 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private cacheManager: Cache,
   ) {}
   async createToken(tokenCreateRequest: TokenCreateRequest) {
     const user = await this.userService.findByUsername(
@@ -34,5 +36,9 @@ export class AuthService {
     const payload = { sub: user.id, username: user.username };
 
     return this.jwtService.signAsync(payload);
+  }
+
+  getCache() {
+    return this.cacheManager;
   }
 }

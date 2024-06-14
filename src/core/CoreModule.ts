@@ -14,10 +14,21 @@ import { JwtModule } from '@nestjs/jwt';
 import { SECRET_KEY } from './constant/user';
 import { AuthGuard } from './guard/AuthGuard';
 import { HttpExceptionFilter } from './filter/HttpExceptionFilter';
+import { CacheModule } from '@nestjs/cache-manager';
+import { TestController } from './controller/TestController';
+import { RedisClientOptions } from 'redis';
+import { redisStore } from 'cache-manager-redis-yet';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
 
 @Global()
 @Module({
   imports: [
+    CacheModule.register<RedisClientOptions>({
+      store: redisStore,
+      url: 'redis://localhost:6379',
+      ttl: 600 * 1000,
+    }),
     ConfigModule.forRoot({
       envFilePath: ['.env.development.local', '.env.development', '.env'],
       isGlobal: true,
@@ -32,6 +43,14 @@ import { HttpExceptionFilter } from './filter/HttpExceptionFilter';
       signOptions: { expiresIn: '240s' },
     }),
     TypeOrmModule.forFeature([User]),
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.File({
+          filename: `logs/combined.log`,
+          level: 'info',
+        }),
+      ],
+    }),
   ],
   providers: [
     UserService,
@@ -49,7 +68,7 @@ import { HttpExceptionFilter } from './filter/HttpExceptionFilter';
       useClass: HttpExceptionFilter,
     },
   ],
-  controllers: [TokenController, UserController],
+  controllers: [TokenController, UserController, TestController],
 })
 export default class CoreModule {
   constructor(private dataSource: DataSource) {}

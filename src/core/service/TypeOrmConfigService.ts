@@ -11,7 +11,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   ) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: 'mysql',
+      type: 'mongodb',
       host: this.dbConfig.host,
       port: this.dbConfig.port,
       username: this.dbConfig.username,
