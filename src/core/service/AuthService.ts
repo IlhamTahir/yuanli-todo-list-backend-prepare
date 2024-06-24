@@ -22,16 +22,15 @@ export class AuthService {
       tokenCreateRequest.username,
     );
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('用户不存在');
     }
-
     const isMatch = await bcrypt.compare(
       tokenCreateRequest.password,
       user.encryptedPassword,
     );
 
     if (!isMatch) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('密码不准确');
     }
     const payload = { sub: user.id, username: user.username };
 

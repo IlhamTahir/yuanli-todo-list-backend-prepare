@@ -1,13 +1,9 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import databaseConfig from '../../config/database';
+import { Controller, Get, Param } from '@nestjs/common';
 
 @Controller('/task')
 export class TaskController {
-  @Inject(databaseConfig.KEY)
-  private dbConfig: ConfigType<typeof databaseConfig>;
-  @Get()
-  getTasks() {
-    return this.dbConfig;
+  @Get('/:id')
+  get(@Param('id') id: string) {
+    return id;
   }
 }

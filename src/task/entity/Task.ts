@@ -1,9 +1,9 @@
 import { Column, Entity } from 'typeorm';
-import { BaseEntity } from '../../core/entity/BaseEntity';
 import { TaskStatus } from '../enum/TaskStatus';
+import { TraceableEntity } from '../../core/entity/TraceableEntity';
 
 @Entity()
-export class Task extends BaseEntity {
+export class Task extends TraceableEntity {
   @Column()
   name: string;
 
