@@ -20,6 +20,8 @@ import { RedisClientOptions } from 'redis';
 import { redisStore } from 'cache-manager-redis-yet';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import { UserContextService } from './service/UserContextService';
+import { TraceableEntitySubscriber } from './subscriber/TraceableEnittySubscriber';
 
 @Global()
 @Module({
@@ -27,7 +29,7 @@ import * as winston from 'winston';
     CacheModule.register<RedisClientOptions>({
       store: redisStore,
       url: 'redis://localhost:6379',
-      ttl: 600 * 1000,
+      ttl: 600 * 1000 * 30,
     }),
     ConfigModule.forRoot({
       envFilePath: ['.env.development.local', '.env.development', '.env'],
@@ -40,7 +42,7 @@ import * as winston from 'winston';
     JwtModule.register({
       global: true,
       secret: SECRET_KEY,
-      signOptions: { expiresIn: '240s' },
+      signOptions: { expiresIn: '24000s' },
     }),
     TypeOrmModule.forFeature([User]),
     WinstonModule.forRoot({
@@ -55,6 +57,8 @@ import * as winston from 'winston';
   providers: [
     UserService,
     AuthService,
+    UserContextService,
+    TraceableEntitySubscriber,
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
